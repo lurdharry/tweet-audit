@@ -1,4 +1,4 @@
-package org.lurdharry.tweetAudit.config,
+package org.lurdharry.tweetAudit.config;
 
 import org.lurdharry.tweetAudit.model.Criteria;
 import org.lurdharry.tweetAudit.parser.FileType;
@@ -7,6 +7,7 @@ public record Settings(
           String inputPath,
           FileType fileType,
           String apiKey,
+          String modelName,
           String username,
           Criteria criteria,
           String outputPath,
@@ -41,6 +42,7 @@ public record Settings(
         private String inputPath;
         private FileType fileType = FileType.JSON;
         private String apiKey="";
+        private String modelName="gemini-2.5-flash";
         private String username="lurdharry";
         private Criteria criteria = Criteria.defaults();
         private String outputPath = "flagged_tweets.csv";
@@ -59,6 +61,11 @@ public record Settings(
 
         public Builder apiKey(String apiKey) {
             this.apiKey = apiKey;
+            return this;
+        }
+
+        public Builder modelName(String modelName){
+            this.modelName = modelName;
             return this;
         }
 
@@ -92,6 +99,7 @@ public record Settings(
                     inputPath,
                     fileType,
                     apiKey,
+                    modelName,
                     username,
                     criteria,
                     outputPath,

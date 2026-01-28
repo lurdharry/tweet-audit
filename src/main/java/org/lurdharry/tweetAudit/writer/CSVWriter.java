@@ -2,6 +2,7 @@ package org.lurdharry.tweetAudit.writer;
 
 import org.lurdharry.tweetAudit.model.AnalysisResult;
 import org.lurdharry.tweetAudit.model.Decision;
+import org.lurdharry.tweetAudit.model.Tweet;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
@@ -33,12 +34,20 @@ public class CSVWriter implements AutoCloseable{
         return new CSVWriter(Paths.get(path).normalize(),append);
     }
 
-    public void writeResult(AnalysisResult result) throws IOException {
-        if (!headerWritten){
-            writer.write("tweet_url,deleted");
+    public void writeTweets(List<Tweet> tweets) throws IOException {
+        writeHeader();
+        for (Tweet tweet :tweets){
+            writer.write(escapeCsv(tweet.id()));
+            writer.write("," + escapeCsv(tweet.text()));
             writer.newLine();
-            headerWritten = true;
         }
+        writer.flush();
+    }
+
+
+
+    public void writeResult(AnalysisResult result) throws IOException {
+        writeHeader();
         if (result.decision() == Decision.DELETE){
             writer.write(escapeCsv(result.tweetUrl() + ", false"));
             writer.newLine();
@@ -53,6 +62,15 @@ public class CSVWriter implements AutoCloseable{
         }
 
     }
+
+    private void writeHeader() throws IOException {
+        if (!headerWritten){
+            writer.write("tweet_url,deleted");
+            writer.newLine();
+            headerWritten=true;
+        }
+    }
+
     private String escapeCsv(String s) {
         if (s.contains(",")||s.contains("\"")||s.contains("\n")){
             return "\"" + s.replace("\"","\"\"") + "\"";
