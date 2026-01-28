@@ -2,6 +2,7 @@ package org.lurdharry.tweetAudit.service;
 
 
 import com.google.gson.Gson;
+import org.lurdharry.tweetAudit.config.Settings;
 import org.lurdharry.tweetAudit.model.*;
 
 
@@ -10,13 +11,27 @@ public class TweetAnalyzer {
     private final GeminiClient client;
     private final Criteria criteria;
     private final Gson gson;
-    private final AnalysisConfig config;
+    private final String baseUrl;
+    private final String username;;
 
-    public TweetAnalyzer(GeminiClient client, Criteria criteria, AnalysisConfig config) {
+    public TweetAnalyzer(GeminiClient client, Criteria criteria, String username, String baseUrl) {
         this.client = client;
         this.criteria = criteria;
-        this.config = config;
+        this.baseUrl = baseUrl;
+        this.username = username;
         this.gson = new Gson();
+    }
+
+    public static TweetAnalyzer loadFromSettings(Settings settings){
+
+        GeminiClient client = new GeminiSdkClient(settings.apiKey(), settings.modelName());
+
+        return new TweetAnalyzer(
+                client,
+                settings.criteria(),
+                settings.username(),
+                settings.baseUrl()
+        );
     }
 
     public AnalysisResult analyze(Tweet tweet) throws Exception {
@@ -78,7 +93,7 @@ public class TweetAnalyzer {
     }
 
     private  String buildUrl(String tweetId){
-        return  config.baseUrl() + "/" + config.username() + "/status/" + tweetId;
+        return  baseUrl + "/" + username + "/status/" + tweetId;
     }
 
     private static final record GeminiResponse(String decision, String reason) {}
