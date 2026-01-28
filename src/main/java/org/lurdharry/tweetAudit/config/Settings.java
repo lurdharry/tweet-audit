@@ -5,15 +5,18 @@ import org.lurdharry.tweetAudit.parser.FileType;
 
 public record Settings(
           String inputPath,
+          String extractedPath,
+          String checkpointPath,
+          String outputPath,
           FileType fileType,
           String apiKey,
           String modelName,
           String username,
           Criteria criteria,
-          String outputPath,
           int batchSize,
           String baseUrl
 ) {
+
 
     public Settings {
         if (inputPath == null || inputPath.isBlank()) {
@@ -39,15 +42,27 @@ public record Settings(
     }
 
     public static final class Builder{
-        private String inputPath;
+        private String inputPath="data/tweet/tweets.json";
         private FileType fileType = FileType.JSON;
         private String apiKey="";
         private String modelName="gemini-2.5-flash";
         private String username="lurdharry";
         private Criteria criteria = Criteria.defaults();
-        private String outputPath = "flagged_tweets.csv";
+        private String outputPath = "data/output/result.csv";
         private int batchSize = 10;
         private String baseUrl = "https://x.com";
+        private String checkpointPath = "data/checkpoint.txt";
+        private String extractedPath = "data/extracted/tweets.scv";
+
+        public  Builder extractedPath(String extractedPath){
+            this.extractedPath = extractedPath;
+            return this;
+        }
+
+        public  Builder checkpointPath(String checkpointPath){
+            this.checkpointPath = checkpointPath;
+            return this;
+        }
 
         public Builder inputPath(String inputPath) {
             this.inputPath = inputPath;
@@ -97,12 +112,14 @@ public record Settings(
         public Settings build() {
             return new  Settings(
                     inputPath,
+                    extractedPath,
+                    checkpointPath,
+                    outputPath,
                     fileType,
                     apiKey,
                     modelName,
                     username,
                     criteria,
-                    outputPath,
                     batchSize,
                     baseUrl
             );
