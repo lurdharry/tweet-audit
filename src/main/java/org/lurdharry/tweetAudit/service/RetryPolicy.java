@@ -23,6 +23,10 @@ public class RetryPolicy {
         this.initialDelay = initialDelay;
     }
 
+    public static RetryPolicy withDefaults() {
+        return new RetryPolicy(3, Duration.ofSeconds(1));
+    }
+
     public <T> T execute(Callable<T> action) throws Exception {
 
         for (int attempt = 0; attempt < maxRetries; attempt++) {

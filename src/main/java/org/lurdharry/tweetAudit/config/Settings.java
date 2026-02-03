@@ -3,6 +3,8 @@ package org.lurdharry.tweetAudit.config;
 import org.lurdharry.tweetAudit.model.Criteria;
 import org.lurdharry.tweetAudit.parser.FileType;
 
+import java.time.Duration;
+
 public record Settings(
           String inputPath,
           String extractedPath,
@@ -14,7 +16,8 @@ public record Settings(
           String username,
           Criteria criteria,
           int batchSize,
-          String baseUrl
+          String baseUrl,
+          Duration rateLimitDelay
 ) {
 
 
@@ -41,6 +44,8 @@ public record Settings(
         return String.format("%s/%s/status/%s", baseUrl, username, tweetId);
     }
 
+
+
     public static final class Builder{
         private String inputPath="data/tweet/tweets.json";
         private FileType fileType = FileType.JSON;
@@ -53,6 +58,12 @@ public record Settings(
         private String baseUrl = "https://x.com";
         private String checkpointPath = "data/checkpoint.txt";
         private String extractedPath = "data/extracted/tweets.scv";
+        private Duration rateLimitDelay = Duration.ofSeconds(1);
+
+        private Builder rateLimitDelay (Duration delay){
+            this.rateLimitDelay = delay;
+            return this;
+        }
 
         public  Builder extractedPath(String extractedPath){
             this.extractedPath = extractedPath;
@@ -121,7 +132,8 @@ public record Settings(
                     username,
                     criteria,
                     batchSize,
-                    baseUrl
+                    baseUrl,
+                    rateLimitDelay
             );
         }
     }
