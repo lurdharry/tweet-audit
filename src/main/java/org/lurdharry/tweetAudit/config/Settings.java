@@ -60,10 +60,6 @@ public record Settings(
         private String extractedPath = "data/extracted/tweets.scv";
         private Duration rateLimitDelay = Duration.ofSeconds(1);
 
-        private Builder rateLimitDelay (Duration delay){
-            this.rateLimitDelay = delay;
-            return this;
-        }
 
         public  Builder extractedPath(String extractedPath){
             this.extractedPath = extractedPath;
@@ -117,6 +113,11 @@ public record Settings(
 
         public Builder baseUrl(String baseUrl) {
             this.baseUrl = baseUrl;
+            return this;
+        }
+
+        public Builder rateLimitDelay(Duration delay){
+            this.rateLimitDelay = delay;
             return this;
         }
 
