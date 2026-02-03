@@ -39,7 +39,6 @@ public class Application {
         logger.info("Parsing tweets from " + settings.inputPath());
         TweetParser parser = new TweetParser(settings.inputPath(), FileType.JSON);
         List<Tweet> tweets;
-
         try {
             tweets = parser.parse();
         } catch (IOException e) {
@@ -47,12 +46,15 @@ public class Application {
             logger.severe(msg);
             throw new IOException(msg);
         }
+        logger.info("Extracted " + tweets.size() + " tweets, writing to CSV");
         writeParseResult(tweets);
+        logger.info("Successfully wrote " + tweets.size() + " tweets to " + settings.extractedPath());
     }
 
 
     public void analyzeTweets() throws IOException {
 
+        logger.info("Loading tweets from " + settings.outputPath());
         List<Tweet> tweets;
         try {
             TweetParser parser = new TweetParser(settings.outputPath(), FileType.CSV);
@@ -67,8 +69,8 @@ public class Application {
         }
 
         // check checkpoint to see the progress of any prev processing
-        int startIndex;
-        startIndex = checkpoint.load();
+        int startIndex = checkpoint.load();
+        logger.info("Resuming from index " + startIndex);
 
         if (startIndex >= tweets.size()){
             logger.info("All " + tweets.size() + " tweets has been analyzed");
@@ -76,7 +78,7 @@ public class Application {
         }
 
         int endIndex = Math.min(startIndex + settings.batchSize(), tweets.size());
-        logger.info(String.format("Processing batch %s -%s of %s", startIndex+1, endIndex, tweets.size()));
+        logger.info(String.format("Processing batch %s -%s of %s", startIndex + 1, endIndex, tweets.size()));
 
         int analyzed = 0;
         int flagged = 0;
@@ -115,14 +117,8 @@ public class Application {
         logger.info(String.format("Batch processing complete! Analyzed %d, flagged %d (%d/%d total)%n",analyzed, flagged, endIndex, tweets.size()));
     }
 
-
-    private List<Tweet> parseTweetFromTransformed () throws IOException {
-        TweetParser parser = new TweetParser(settings.outputPath(), FileType.CSV);
-        return parser.parse();
-    }
-
     private void writeParseResult(List<Tweet> tweets) throws IOException {
-        System.out.println("Writing parse result to " + settings.extractedPath());
+        logger.info("Writing parse result to " + settings.extractedPath());
         try (CSVWriter writer = CSVWriter.create(settings.extractedPath(), false)) {
             writer.writeTweets(tweets);
             logger.info("Success writing parsed tweet");
@@ -130,6 +126,6 @@ public class Application {
             logger.severe("Error writing tweets");
             throw new IOException("Error writing tweet to csv: " + e.getMessage());
         }
-    }
 
+    }
 }
