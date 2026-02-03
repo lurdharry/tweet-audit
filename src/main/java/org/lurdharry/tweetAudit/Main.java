@@ -2,6 +2,7 @@ package org.lurdharry.tweetAudit;
 
 
 import org.lurdharry.tweetAudit.application.Application;
+import org.lurdharry.tweetAudit.config.ConfigLoader;
 import org.lurdharry.tweetAudit.config.Settings;
 
 import java.io.IOException;
@@ -21,8 +22,10 @@ public class Main {
         String command = args[0];
 
         try {
-            Settings settings = buildSettings();
+            ConfigLoader configLoader = new ConfigLoader();
+            Settings settings = configLoader.load();
             Application application = new Application(settings);
+
             switch (command){
                 case EXTRACT -> application.parseTweets();
                 case ANALYZE -> application.analyzeTweets();
