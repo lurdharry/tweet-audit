@@ -54,10 +54,10 @@ public class Application {
 
     public void analyzeTweets() throws IOException {
 
-        logger.info("Loading tweets from " + settings.outputPath());
+        logger.info("Loading tweets from " + settings.extractedPath());
         List<Tweet> tweets;
         try {
-            TweetParser parser = new TweetParser(settings.outputPath(), FileType.CSV);
+            TweetParser parser = new TweetParser(settings.extractedPath(), FileType.CSV);
             tweets = parser.parse();
         } catch (IOException e) {
             throw new IOException("Unable to parse tweet to "+ FileType.CSV.toString());

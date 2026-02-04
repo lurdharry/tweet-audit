@@ -1,0 +1,6 @@
+{
+  "forbiddenWords": ["crypto", "NFT", "hustlegrindset"],
+  "professionalCheck": true,
+  "tone": "respectful and thoughtful",
+  "excludePolitics": true
+}

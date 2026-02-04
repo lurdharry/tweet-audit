@@ -57,7 +57,7 @@ public record Settings(
         private int batchSize = 10;
         private String baseUrl = "https://x.com";
         private String checkpointPath = "data/checkpoint.txt";
-        private String extractedPath = "data/extracted/tweets.scv";
+        private String extractedPath = "data/extracted/tweets.csv";
         private Duration rateLimitDelay = Duration.ofSeconds(1);
 
 

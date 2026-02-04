@@ -35,7 +35,7 @@ public class CSVWriter implements AutoCloseable{
     }
 
     public void writeTweets(List<Tweet> tweets) throws IOException {
-        writeHeader();
+        writeHeader("id_str","full_text");
         for (Tweet tweet :tweets){
             writer.write(escapeCsv(tweet.id()));
             writer.write("," + escapeCsv(tweet.text()));
@@ -47,12 +47,11 @@ public class CSVWriter implements AutoCloseable{
 
 
     public void writeResult(AnalysisResult result) throws IOException {
-        writeHeader();
-        if (result.decision() == Decision.DELETE){
-            writer.write(escapeCsv(result.tweetUrl() + ", false"));
+        writeHeader("tweet_url","deleted");
+            writer.write(escapeCsv(result.tweetUrl()) + ",false");
             writer.newLine();
             writer.flush();
-        }
+
     }
 
 
@@ -63,9 +62,9 @@ public class CSVWriter implements AutoCloseable{
 
     }
 
-    private void writeHeader() throws IOException {
+    private void writeHeader(String fTitle,String sTitle) throws IOException {
         if (!headerWritten){
-            writer.write("tweet_url,deleted");
+            writer.write(String.format("%s,%s",fTitle,sTitle));
             writer.newLine();
             headerWritten=true;
         }

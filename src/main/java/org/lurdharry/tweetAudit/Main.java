@@ -5,8 +5,6 @@ import org.lurdharry.tweetAudit.application.Application;
 import org.lurdharry.tweetAudit.config.ConfigLoader;
 import org.lurdharry.tweetAudit.config.Settings;
 
-import java.io.IOException;
-
 public class Main {
 
     private static final String EXTRACT = "extract";
